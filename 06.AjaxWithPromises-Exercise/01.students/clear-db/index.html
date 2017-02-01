@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Empty DB</title>
+</head>
+<body>
+<button id="clear">Clear DB now!</button>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    $('#clear').on('click', function () {
+        const username = 'guest';
+        const password = 'guest';
+        const basicAuthHeader = {Authorization: `Basic ${btoa(username + ':' + password)}`};
+        const appId = 'kid_BJXTsSi-e';
+        const baseUrl = `https://baas.kinvey.com/appdata/${appId}/students/`;
+
+        $.get({
+            url: baseUrl,
+            headers: basicAuthHeader
+        })
+            .then(data => {
+                for (let student of data) {
+                    $.ajax({
+                        method: 'DELETE',
+                        headers: basicAuthHeader,
+                        url: baseUrl + student._id
+                    })
+                        .then(console.log('Item removed'))
+                }
+            });
+    })
+</script>
+</body>
+</html>
